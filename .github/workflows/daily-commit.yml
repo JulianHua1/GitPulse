@@ -1,0 +1,143 @@
+name: Daily Commit Tracker
+
+on:
+  schedule:
+    # Run daily at 2:00 AM UTC - GitHub Actions guaranteed for years
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual triggering
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  update-activity:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    timeout-minutes: 10
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for reliability
+        token: ${{ secrets.GITHUB_TOKEN }}
+      
+    - name: Setup environment
+      run: |
+        sudo timedatectl set-timezone UTC
+        mkdir -p logs
+        
+    - name: Update activity logs with error handling
+      run: |
+        set -e  # Exit on any error
+        
+        TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S UTC')
+        DATE_ONLY=$(date '+%Y-%m-%d')
+        
+        # Ensure logs directory exists
+        mkdir -p logs
+        
+        # Create or update daily activity log
+        echo "Daily activity commit - $TIMESTAMP" >> logs/daily-activity.log
+        echo "Last updated: $TIMESTAMP" > logs/last-update.txt
+        
+        # Handle streak count with validation
+        if [ ! -f logs/streak-count.txt ] || [ ! -s logs/streak-count.txt ]; then
+          echo "1" > logs/streak-count.txt
+          echo "Streak started: $DATE_ONLY" > logs/streak-info.txt
+        else
+          CURRENT_STREAK=$(cat logs/streak-count.txt | tr -d '[:space:]')
+          if [[ "$CURRENT_STREAK" =~ ^[0-9]+$ ]]; then
+            NEW_STREAK=$((CURRENT_STREAK + 1))
+            echo "$NEW_STREAK" > logs/streak-count.txt
+          else
+            echo "1" > logs/streak-count.txt
+            echo "Streak reset: $DATE_ONLY" > logs/streak-info.txt
+          fi
+        fi
+        
+        # Maintain log file size (keep last 1000 entries)
+        if [ -f logs/daily-activity.log ]; then
+          tail -n 1000 logs/daily-activity.log > logs/daily-activity.log.tmp
+          mv logs/daily-activity.log.tmp logs/daily-activity.log
+        fi
+        
+        # Verify files were created successfully
+        ls -la logs/
+        echo "Activity log entries: $(wc -l < logs/daily-activity.log)"
+        echo "Current streak: $(cat logs/streak-count.txt)"
+        
+    - name: Commit and push with retry
+      run: |
+        set -e
+        
+        # Configure git with consistent identity
+        git config --local user.email "197464004+JulianHua1@users.noreply.github.com"
+        git config --local user.name "JulianHua1"
+        git config --local core.autocrlf false
+        
+        # Check if there are changes to commit
+        if [ -n "$(git status --porcelain logs/)" ]; then
+          git add logs/
+          git commit -m "Daily activity update - $(date '+%Y-%m-%d %H:%M:%S UTC')"
+          
+          # Push with retry logic
+          for i in {1..3}; do
+            if git push origin main; then
+              echo "Successfully pushed on attempt $i"
+              break
+            else
+              echo "Push failed on attempt $i, retrying..."
+              sleep 5
+              git pull --rebase origin main || true
+            fi
+          done
+        else
+          echo "No changes to commit"
+        fi
+        
+  deploy-pages:
+    needs: update-activity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    - name: Checkout latest code
+      uses: actions/checkout@v4
+      with:
+        ref: main
+        fetch-depth: 1
+        
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Prepare deployment
+      run: |
+        # Ensure all necessary files are present
+        ls -la
+        ls -la logs/ || echo "Logs directory missing, will be created"
+        
+        # Verify essential files exist
+        test -f index.html || { echo "index.html missing!"; exit 1; }
+        test -f dashboard.css || { echo "dashboard.css missing!"; exit 1; }
+        test -f dashboard.js || { echo "dashboard.js missing!"; exit 1; }
+        
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: '.'
+        retention-days: 1
+        
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+      
+    - name: Verify deployment
+      run: |
+        echo "Dashboard deployed to: ${{ steps.deployment.outputs.page_url }}"
+        echo "Deployment completed at: $(date '+%Y-%m-%d %H:%M:%S UTC')"

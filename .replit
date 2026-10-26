@@ -1,0 +1,54 @@
+modules = ["nodejs-20", "python-3.11"]
+
+[nix]
+channel = "stable-25_05"
+packages = ["libyaml"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "GitHub Actions Workflow Demo"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Dashboard Server"
+
+[[workflows.workflow]]
+name = "GitHub Actions Workflow Demo"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "echo \"GitHub Actions Daily Commit Workflow is configured!\" && echo \"This workflow will:\" && echo \"- Run daily at 2:00 AM UTC\" && echo \"- Create activity logs in logs/ directory\" && echo \"- Make automated commits to maintain repository activity\" && echo \"\" && echo \"To test locally, we can simulate the workflow steps:\" && mkdir -p logs && TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S UTC') && echo \"Daily activity commit - $TIMESTAMP\" >> logs/daily-activity.log && echo \"Last updated: $TIMESTAMP\" > logs/last-update.txt && echo \"\" && echo \"Generated files:\" && ls -la logs/ && echo \"\" && echo \"Content of daily-activity.log:\" && cat logs/daily-activity.log && echo \"\" && echo \"Content of last-update.txt:\" && cat logs/last-update.txt && echo \"\" && echo \"✅ Workflow simulation completed successfully!\""
+
+[[workflows.workflow]]
+name = "Dashboard Server"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python server.py"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5001
+externalPort = 3000
+
+[[ports]]
+localPort = 5002
+externalPort = 3001
+
+[[ports]]
+localPort = 5003
+externalPort = 3002

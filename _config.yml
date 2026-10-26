@@ -1,0 +1,24 @@
+# GitHub Pages configuration
+title: GitPulse - Daily Commit Dashboard
+description: Track your coding consistency and build lasting habits
+theme: minima
+
+# GitHub Pages settings
+plugins:
+  - jekyll-relative-links
+
+# Exclude files from build
+exclude:
+  - README.md
+  - server.py
+  - simple_server.py
+  - pyproject.toml
+  - uv.lock
+  - setup.sh
+
+# Include necessary files
+include:
+  - dashboard.css
+  - dashboard.js
+  - index.html
+  - logs/

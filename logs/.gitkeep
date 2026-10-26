@@ -1,0 +1,2 @@
+# This file ensures the logs directory is tracked in git
+# It will be automatically removed when actual log files are created

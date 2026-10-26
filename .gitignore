@@ -1,0 +1,29 @@
+# GitHub Actions Daily Commit Repository
+# Standard gitignore for automation repository
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+__pycache__/
+
+# Don't ignore our automation files!
+# The logs directory should be tracked since it's part of the automation
+!logs/
+!.github/

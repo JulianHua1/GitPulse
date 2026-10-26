@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitPulse - Streak Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Main Content -->
+        <main class="main-content full-width">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <div class="header-info">
+                        <div class="header-logo">
+                            <i data-lucide="git-commit-horizontal" class="logo-icon"></i>
+                            <span class="logo-text">GitPulse</span>
+                        </div>
+                        <h1>Daily Commit Dashboard</h1>
+                        <p class="header-subtitle">Track your coding consistency and build lasting habits</p>
+                    </div>
+                    <div class="header-actions">
+                        <div class="status-indicator">
+                            <div class="status-dot"></div>
+                            <span>Auto-sync active</span>
+                        </div>
+                        <div class="last-sync">
+                            <i data-lucide="clock"></i>
+                            <span id="last-update">Loading...</span>
+                        </div>
+                        <button class="refresh-btn" onclick="window.location.reload()">
+                            <i data-lucide="refresh-cw"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Overview -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card primary">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i data-lucide="flame"></i>
+                            </div>
+                            <div class="stat-trend">
+                                <i data-lucide="trending-up"></i>
+                            </div>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="current-streak">0</h3>
+                            <p>Current Streak</p>
+                            <span class="stat-unit">days</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i data-lucide="git-commit"></i>
+                            </div>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-commits">0</h3>
+                            <p>Total Commits</p>
+                            <span class="stat-unit">automated</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i data-lucide="award"></i>
+                            </div>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="longest-streak">0</h3>
+                            <p>Best Streak</p>
+                            <span class="stat-unit">days</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <i data-lucide="target"></i>
+                            </div>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="success-rate">0</h3>
+                            <p>Success Rate</p>
+                            <span class="stat-unit">%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Activity Heatmap</h3>
+                            <p>Last 90 days of commits</p>
+                        </div>
+                        <div class="chart-body">
+                            <div id="activity-heatmap" class="heatmap-container">
+                                <!-- Heatmap will be generated here -->
+                            </div>
+                            <div class="heatmap-legend">
+                                <span>Less</span>
+                                <div class="legend-scale">
+                                    <div class="legend-day level-0"></div>
+                                    <div class="legend-day level-1"></div>
+                                    <div class="legend-day level-2"></div>
+                                    <div class="legend-day level-3"></div>
+                                    <div class="legend-day level-4"></div>
+                                </div>
+                                <span>More</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Streak Progression</h3>
+                            <p>Daily streak count over time</p>
+                        </div>
+                        <div class="chart-body">
+                            <canvas id="streak-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Activity Feed -->
+            <section class="activity-section">
+                <div class="section-header">
+                    <h3>Recent Activity</h3>
+                    <button class="view-all-btn">
+                        <span>View All</span>
+                        <i data-lucide="arrow-right"></i>
+                    </button>
+                </div>
+                <div class="activity-feed" id="activity-list">
+                    <!-- Activity items will be generated here -->
+                </div>
+            </section>
+
+            <!-- Milestones -->
+            <section class="milestones-section">
+                <div class="section-header">
+                    <h3>Streak Milestones</h3>
+                </div>
+                <div class="milestones-grid" id="milestones-list">
+                    <!-- Milestone cards will be generated here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
