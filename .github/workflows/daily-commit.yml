@@ -2,11 +2,9 @@ name: Daily Commit Tracker
 
 on:
   schedule:
-    # Run daily at 2:00 AM UTC - GitHub Actions guaranteed for years
-    - cron: '0 2 * * *'
+    # Run twice daily, two hours apart (UTC)
+    - cron: '17 2,4 * * *'
   workflow_dispatch: # Allow manual triggering
-  push:
-    branches: [ main ]
 
 permissions:
   contents: write
