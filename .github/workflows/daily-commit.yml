@@ -2,8 +2,8 @@ name: Daily Commit Tracker
 
 on:
   schedule:
-    # Run twice daily, two hours apart (UTC)
-    - cron: '17 2,4 * * *'
+    # Start two daily runs one hour apart (UTC); each waits a random time.
+    - cron: '17 2,3 * * *'
   workflow_dispatch: # Allow manual triggering
 
 permissions:
@@ -15,7 +15,7 @@ jobs:
   update-activity:
     runs-on: ubuntu-latest
     continue-on-error: false
-    timeout-minutes: 10
+    timeout-minutes: 70
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -27,6 +27,13 @@ jobs:
       run: |
         sudo timedatectl set-timezone UTC
         mkdir -p logs
+
+    - name: Randomize scheduled commit time
+      if: github.event_name == 'schedule'
+      run: |
+        delay_seconds=$(shuf -i 0-3000 -n 1)
+        echo "Waiting ${delay_seconds} seconds before this scheduled commit"
+        sleep "$delay_seconds"
         
     - name: Update activity logs with error handling
       run: |
