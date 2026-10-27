@@ -48,7 +48,7 @@ git push origin main
 
 ## That's It!
 
-Your repository will now automatically commit daily at 2:00 AM UTC. You'll see:
+Your repository will now make two scheduled commits between 1 and 5 PM Los Angeles time. You'll see:
 
 - New commits appearing daily
 - A `logs/` directory with activity files

@@ -12,7 +12,7 @@
 - **🎨 Beautiful Dashboard** - Colorful gradients, smooth animations, mobile-responsive design
 - **📊 Activity Heatmap** - 90-day GitHub-style contribution graph with proper color coding
 - **🔥 Streak Tracking** - Current streak, best streak, total commits, and success rate
-- **🤖 Fully Automated** - Daily commits at 2:00 AM UTC + automatic dashboard updates
+- **🤖 Fully Automated** - Two daily commits between 1 and 5 PM Los Angeles time + automatic dashboard updates
 - **🌐 GitHub Pages Ready** - Zero-config deployment with intelligent data loading
 - **📱 Mobile Optimized** - Responsive design that works perfectly on all devices
 - **🛠️ Self-Healing** - Error recovery, data validation, and automatic maintenance
@@ -87,7 +87,7 @@ graph LR
     D --> E[Dashboard Update]
 ```
 
-1. **Trigger**: Daily cron job at 2:00 AM UTC
+1. **Trigger**: Frequent checks from 1 to 5 PM Los Angeles time; two daily commit targets are selected within that window
 2. **Process**: Update activity logs and streak counters
 3. **Commit**: Atomic commit with retry logic
 4. **Deploy**: Automatic GitHub Pages deployment
@@ -142,7 +142,8 @@ Modify the workflow trigger in `.github/workflows/daily-commit.yml`:
 ```yaml
 on:
   schedule:
-    - cron: '0 2 * * *'  # Daily at 2:00 AM UTC
+    - cron: '7,17,27,37,47,57 13-16 * * *'
+      timezone: America/Los_Angeles
 ```
 
 Common schedules:

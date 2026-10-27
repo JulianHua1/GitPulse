@@ -25,7 +25,7 @@ This dashboard is fully optimized for GitHub Pages with zero configuration neede
    - Dashboard available at: `https://[username].github.io/[repo-name]`
 
 ### Features
-- ✅ Automatic daily commits at 2:00 AM UTC
+- ✅ Two automatic commits between 1 and 5 PM Los Angeles time
 - ✅ Real-time activity tracking
 - ✅ Responsive design for all devices
 - ✅ Colorful, animated dashboard

@@ -73,7 +73,7 @@ The workflow provides built-in monitoring:
 ## 🎯 Zero Intervention Required
 
 Once deployed, this system:
-- ✅ Runs daily at 2:00 AM UTC automatically
+- ✅ Schedules two commits between 1 and 5 PM Los Angeles time each day
 - ✅ Updates all dashboard statistics in real-time
 - ✅ Maintains streak counts accurately
 - ✅ Deploys updated dashboard to GitHub Pages

@@ -2,9 +2,23 @@ name: Daily Commit Tracker
 
 on:
   schedule:
-    # Check often so a delayed or skipped tick does not lose a daily commit.
-    - cron: '7,17,27,37,47,57 2-4 * * *'
-  workflow_dispatch: # Allow manual triggering
+    # Check throughout the 1-5 PM Los Angeles window.
+    - cron: '7,17,27,37,47,57 13-16 * * *'
+      timezone: America/Los_Angeles
+  workflow_dispatch:
+    inputs:
+      force_commit:
+        description: Create one commit now
+        required: true
+        default: true
+        type: boolean
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - dashboard.css
+      - dashboard.js
+      - .github/workflows/daily-commit.yml
 
 concurrency:
   group: gitpulse-daily-activity
@@ -28,11 +42,14 @@ jobs:
         fetch-depth: 0
     - name: Update due activity
       id: activity
+      if: github.event_name != 'push'
       run: python3 scripts/update_activity.py
+      env:
+        FORCE_COMMIT: ${{ inputs.force_commit }}
 
   deploy-pages:
     needs: update-activity
-    if: needs.update-activity.outputs.changed == 'true'
+    if: github.event_name == 'push' || needs.update-activity.outputs.changed == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment:

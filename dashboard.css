@@ -161,6 +161,38 @@ body {
     border: 1px solid rgba(255,255,255,0.15);
 }
 
+.commit-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.85rem;
+    border-radius: 12px;
+    background: white;
+    color: #4f46e5;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.commit-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 7px 16px rgba(0, 0, 0, 0.2);
+}
+
+.commit-action i {
+    width: 18px;
+    height: 18px;
+}
+
+.commit-action small {
+    display: block;
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 500;
+}
+
 .refresh-btn {
     background: rgba(255,255,255,0.15);
     border: 1px solid rgba(255,255,255,0.25);
